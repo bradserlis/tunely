@@ -69,6 +69,11 @@ app.get('/', function homepage (req, res) {
   res.render('index', { albums: albums });
 });
 
+app.get('/api/albums', function (req, res) {
+  res.json(albums);
+});
+
+
 // TODO: GET ROUTE for single album (Route has an id in the url. e.g., /:id that can be accessed
 // on the request object with req.params.id).
 
