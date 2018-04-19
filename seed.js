@@ -9,7 +9,6 @@
   `node seed.js`
 */
 
-
 var db = require("./models");
 
 var sampleAlbums = [{
