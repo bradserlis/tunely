@@ -13,4 +13,14 @@
 
 $(document).ready(function() {
   console.log('app.js loaded!');
+
+  $.ajax({
+    method: 'GET',
+    url: '/api/albums',
+    // success: handleSuccess,
+    // error: handleError
+  });
+
+  
+
 });
