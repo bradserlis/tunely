@@ -19,25 +19,66 @@ $(document).ready(function() {
   $.ajax({
     method: 'GET',
     url: '/api/albums',
-    success: handleSuccess
-    // error: handleError
+    success: handleSuccess,
+    error: handleError
   });
 
+});
+
+function setEventListeners () {
   $('#newAlbumForm').on('submit', function(e) {
-    e.preventDefault();
     $.ajax({
       method: 'POST',
       url: '/api/albums',
       data: $(this).serialize(),
-      success: newAlbumSuccess
-      // error: handleError
+      success: newAlbumSuccess,
+      error: handleError
     })
   });
-});
+}
 
 function getAlbumHtml(album) {
   return `<!-- one album -->
+          
           <div class="row album">
+
+            <form id="newAlbumForm">
+              <fieldset>
+                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header text-left">
+                        <h4 class="modal-title w-100 font-weight-bold" style="display: inline;">Add New Album</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body mx-3">
+                        <div class="md-form mb-5">
+                          <input type="text" id="name" name="name" class="form-control input-md" required="" placeholder="Album Name">
+                        </div>
+
+                        <div class="md-form mb-5">
+                          <input type="text" id="textinput" name="artistName" class="form-control input-md" placeholder="Artist Name">
+                        </div>
+
+                        <div class="md-form mb-5">
+                          <input type="text" id="releaseDate" name="releaseDate" class="form-control input-md" placeholder="Release Date (e.g., 1992)">
+                        </div>
+
+                        <div class="md-form">
+                            <textarea type="text" id="genres" name="genres" class="form-control" rows="4" placeholder="Genre (e.g., rock, pop, hip hop, etc)"></textarea>
+                        </div>
+                      </div>
+                      <div class="modal-footer d-flex justify-content-center">
+                          <button id="formSubmitButton" name="formSubmitButton" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        
             <div class="col-md-10 col-md-offset-1">
               <div class="panel panel-default">
                 <div class="panel-body">
@@ -88,6 +129,7 @@ function render () {
 
   // append html to the view
   $albumList.append(albumHtml);
+  setEventListeners();
 };
 
 function handleSuccess(json) {
@@ -99,4 +141,8 @@ function newAlbumSuccess (json) {
   $('#newAlbumForm input').val('');
   allAlbums.push(json);
   render();
+}
+
+function handleError(e) {
+  $albumList.text('Failed to load albums, is the server working?');
 }

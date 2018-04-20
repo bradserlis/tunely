@@ -14,9 +14,10 @@
   margin-right: 12px;
 }
 
-body {
-color:purple;
+input {
+  margin: 10px auto;
 }
 
-h1 {
+.clearfix {
+  padding-top: 20px;
 }
