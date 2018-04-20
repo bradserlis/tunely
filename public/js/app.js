@@ -85,7 +85,7 @@ function getAlbumHtml(album) {
                 <!-- begin album internal row -->
                   <div class='row'>
                     <div class="col-md-3 col-xs-12 thumbnail album-art">
-                      <img src="http://placehold.it/800x800" alt="album image">
+                      <img src="${album.albumArt}" alt="album image">
                     </div>
                     <div class="col-md-9 col-xs-12">
                       <ul class="list-group">
