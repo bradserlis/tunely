@@ -4,10 +4,12 @@
 var express = require('express');
 // generate a new express app and call it 'app'
 var app = express();
+const bodyParser = require('body-parser');
 
 // set EJS as our view engine. This allows us to make dynamic pages.
 app.set('view engine', 'ejs');
 
+app.use(bodyParser.urlencoded({ extended: true }))
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 
@@ -28,8 +30,6 @@ ready to proceed with hooking up the database, go to ./models/album to create a 
 Then, take a look into the seed.js file to populate some starter data.
 */
 
-
-
 /**********
  * ROUTES *
  **********/
@@ -41,7 +41,9 @@ Then, take a look into the seed.js file to populate some starter data.
 app.get('/', function homepage (req, res) {
   // This albums variable is the array of objects defined above.
   // TODO: Eventually, this should be replaced with a find() call to your database!
-  res.render('index', { albums: albums });
+  db.Album.find(function (err, albums){
+    res.render('index', { albums: albums });
+  });
 });
 
 app.get('/api/albums', function (req, res) {
@@ -50,6 +52,12 @@ app.get('/api/albums', function (req, res) {
   });
 });
 
+app.post('/api/albums', function (req, res) {
+  // db.Album.create(function (err, albums){
+  //   res.json(albums);
+  console.log(req.body);
+  res.redirect('/');
+});
 
 // TODO: GET ROUTE for single album (Route has an id in the url. e.g., /:id that can be accessed
 // on the request object with req.params.id).

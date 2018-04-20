@@ -21,6 +21,18 @@ $(document).ready(function() {
     // error: handleError
   });
 
-  
-
+  $('#newAlbumForm').on('submit', function(e) {
+    e.preventDefault();
+    $.ajax({
+      method: 'POST',
+      url: '/api/albums',
+      data: $(this).serialize()
+      // success: handleSuccess,
+      // error: handleError
+    })
+    $('#name').val('');
+    $('#textinput').val('');
+    $('#releaseDate').val('');
+    $('#genres').val('');
+  });
 });
