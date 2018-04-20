@@ -21,6 +21,15 @@ $(document).ready(function() {
     // error: handleError
   });
 
-  
+$('#newAlbumForm').on('submit', function(e) {
+    e.preventDefault();
+    $(input).val('');
+    $.ajax({
+      method: 'POST',
+      url: '/',
+      data: $(this).serialize(),
+      // success: handleSuccess,
+      // error: handleError
+    })
 
 });
