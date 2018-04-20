@@ -52,18 +52,22 @@ app.get('/api/albums', function (req, res) {
   });
 });
 
-app.post('/api/albums', function (req, res) {
-  // db.Album.create(function (err, albums){
-  //   res.json(albums);
-  console.log(req.body);
-  res.redirect('/');
-});
 
 // TODO: GET ROUTE for single album (Route has an id in the url. e.g., /:id that can be accessed
 // on the request object with req.params.id).
 
 // TODO: POST ROUTE (NOTE: You can submit a post request directly from an HTML form tag
 // using the method and action attributes - no need for AJAX!)
+app.post('/api/albums', function (req, res) {
+  let genreGrabber = req.body.genres;
+  let genreArr = genreGrabber.split(',')
+  for (let i = 0; i < genreArr.length; i++) {
+    genreArr[i] = genreArr[i].trim();
+  }
+  let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr})
+  newAlbum.save()
+  res.json('/api/albums');
+});
 
 
 /*

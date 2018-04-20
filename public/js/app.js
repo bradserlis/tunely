@@ -13,7 +13,6 @@
 
 $(document).ready(function() {
   console.log('app.js loaded!');
-
   $.ajax({
     method: 'GET',
     url: '/api/albums',
@@ -27,7 +26,7 @@ $(document).ready(function() {
       method: 'POST',
       url: '/api/albums',
       data: $(this).serialize()
-      // success: handleSuccess,
+      // success: newAlbumSuccess,
       // error: handleError
     })
     $('#name').val('');
