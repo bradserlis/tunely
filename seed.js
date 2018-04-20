@@ -44,7 +44,7 @@ var sampleAlbums = [{
   name: 'Ladyhawke',
   releaseDate: '2008, November 18',
   genres: [ 'new wave', 'indie rock', 'synth pop' ],
-  albumArt: 'images/johnnycash_unchained.jpg'
+  albumArt: 'images/ladyhawke_ladyhawke.jpg'
 },
 {
   artistName: 'The Knife',

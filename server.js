@@ -60,7 +60,8 @@ app.post('/api/albums', function (req, res) {
   for (let i = 0; i < genreArr.length; i++) {
     genreArr[i] = genreArr[i].trim();
   };
-  let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr});
+  let defaultAlbumArt = 'http://placehold.it/800x800';
+  let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr, albumArt: defaultAlbumArt});
   newAlbum.save();
   res.json(newAlbum);
 });
