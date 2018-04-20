@@ -9,11 +9,11 @@ const bodyParser = require('body-parser');
 // set EJS as our view engine. This allows us to make dynamic pages.
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }));
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 
-const db = require('./models')
+const db = require('./models');
 
 /************
  * DATABASE *
@@ -39,11 +39,8 @@ Then, take a look into the seed.js file to populate some starter data.
  */
 
 app.get('/', function homepage (req, res) {
-  // This albums variable is the array of objects defined above.
-  // TODO: Eventually, this should be replaced with a find() call to your database!
-  db.Album.find(function (err, albums){
-    res.render('index', { albums: albums });
-  });
+    res.render('index');
+  // });
 });
 
 app.get('/api/albums', function (req, res) {
@@ -52,7 +49,6 @@ app.get('/api/albums', function (req, res) {
   });
 });
 
-
 // TODO: GET ROUTE for single album (Route has an id in the url. e.g., /:id that can be accessed
 // on the request object with req.params.id).
 
@@ -60,15 +56,14 @@ app.get('/api/albums', function (req, res) {
 // using the method and action attributes - no need for AJAX!)
 app.post('/api/albums', function (req, res) {
   let genreGrabber = req.body.genres;
-  let genreArr = genreGrabber.split(',')
+  let genreArr = genreGrabber.split(',');
   for (let i = 0; i < genreArr.length; i++) {
     genreArr[i] = genreArr[i].trim();
-  }
-  let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr})
-  newAlbum.save()
-  res.json('/api/albums');
+  };
+  let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr});
+  newAlbum.save();
+  res.json(newAlbum);
 });
-
 
 /*
  * JSON API Endpoints: This usually means AJAX has been used to call this route
