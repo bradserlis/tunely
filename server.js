@@ -4,10 +4,12 @@
 var express = require('express');
 // generate a new express app and call it 'app'
 var app = express();
+const bodyParser = require('body-parser');
 
 // set EJS as our view engine. This allows us to make dynamic pages.
 app.set('view engine', 'ejs');
 
+app.use(bodyParser.urlencoded({ extended: true }))
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 
@@ -50,9 +52,10 @@ app.get('/api/albums', function (req, res) {
   });
 });
 
-app.post('/', function (req, res) {
-  db.Album.create(function (err, albums){
+app.post('/api/albums', function (req, res) {
+  // db.Album.create(function (err, albums){
   //   res.json(albums);
+  console.log(req.body);
   res.redirect('/');
 });
 
