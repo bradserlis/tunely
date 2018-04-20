@@ -68,25 +68,10 @@ var sampleAlbums = [{
   albumArt: 'images/philipwesley_darknightofthesoul.jpg'
 }];
 
-db.Album.remove({}, function(err, albums){
-
-  db.Album.create(sampleAlbums, function(err, albums){
-    if (err) { return console.log('ERROR', err); }
-    console.log("all albums:", albums);
-    console.log("created", albums.length, "albums");
-    process.exit();
-  });
-
-});
-
-var SongSchema = new Schema({
-  name: String,
-  trackNumber: Number,
-});
-
 var sampleSongs = [];
 
-sampleSongs.push({ name: 'Swamped',trackNumber: 1
+sampleSongs.push({ name: 'Swamped', 
+                  trackNumber: 1
 });
 sampleSongs.push({ name: "Heaven's a Lie",
                    trackNumber: 2
@@ -106,4 +91,21 @@ sampleSongs.push({ name: 'Aeon',
 sampleSongs.push({ name: 'Tight Rope',
                    trackNumber: 7
 });
+
+sampleAlbums.forEach((val, index)=>{
+  sampleAlbums[index].songs = sampleSongs;
+});
+
+
+db.Album.remove({}, function(err, albums){
+
+  db.Album.create(sampleAlbums, function(err, albums){
+    if (err) { return console.log('ERROR', err); }
+    console.log("all albums:", albums);
+    console.log("created", albums.length, "albums");
+    process.exit();
+  });
+
+});
+
 
