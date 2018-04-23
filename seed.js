@@ -92,10 +92,9 @@ sampleSongs.push({ name: 'Tight Rope',
                    trackNumber: 7
 });
 
-sampleAlbums.forEach((val, index)=>{
-  sampleAlbums[index].songs = sampleSongs;
+sampleAlbums.forEach( (album) => {
+  album.songs = sampleSongs;
 });
-
 
 db.Album.remove({}, function(err, albums){
 
@@ -107,5 +106,3 @@ db.Album.remove({}, function(err, albums){
   });
 
 });
-
-

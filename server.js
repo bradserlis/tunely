@@ -1,5 +1,4 @@
 // SERVER-SIDE JAVASCRIPT
-
 //require express in our app
 var express = require('express');
 // generate a new express app and call it 'app'
@@ -40,7 +39,6 @@ Then, take a look into the seed.js file to populate some starter data.
 
 app.get('/', function homepage (req, res) {
     res.render('index');
-  // });
 });
 
 app.get('/api/albums', function (req, res) {
@@ -64,6 +62,29 @@ app.post('/api/albums', function (req, res) {
   let newAlbum = new db.Album({name:req.body.name, artistName:req.body.artistName, releaseDate:req.body.releaseDate, genres:genreArr, albumArt: defaultAlbumArt});
   newAlbum.save();
   res.json(newAlbum);
+});
+
+app.post('/api/albums/:album_id/songs/:song_id', function (req, res) {
+  let newSong = new db.Song({name: req.body.songName, trackNumber: req.body.trackNumber})
+  newSong.save();
+  let albumId = req.params.album_id.slice(1, req.params.album_id.length);
+  db.Album.findByIdAndUpdate(
+    albumId,
+    {$push: {songs: newSong}},
+    { 'new': true },
+    function (err, album) {
+      if (err) {
+        console.log('Error adding new song to db', err)
+      };
+      res.json(album);
+    })
+})
+
+app.get('/profile', function (req, res) {
+  // find the user currently logged in
+  User.findOne({_id: req.session.userId}, function (err, currentUser) {
+    res.render('profile', {user: currentUser})
+  });
 });
 
 /*
