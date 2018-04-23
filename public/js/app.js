@@ -12,6 +12,8 @@
  */
 var $albumList;
 var allAlbums = [];
+var songs = [];
+// var currentAlbumId;
 
 $(document).ready(function() {
   $albumList = $('#albumTarget');
@@ -22,10 +24,26 @@ $(document).ready(function() {
     success: handleSuccess,
     error: handleError
   });
-
 });
 
+// call this when the button on the modal is clicked
+function handleNewSongSubmit(currentAlbumId) {
+  $('#saveSong').on('click', function(e) {
+    e.preventDefault();
+    let songName = $('#songName').val();
+    let trackNumber = $('#trackNumber').val();
+    $.ajax({
+      method: 'POST',
+      url: `/api/albums/:${currentAlbumId}/songs/:id`,
+      data: {songName, trackNumber},
+      success: newSongSuccess,
+      error: handleError
+    })
+  });
+}
+
 function setEventListeners () {
+  // New Album submit button event listener
   $('#newAlbumForm').on('submit', function(e) {
     $.ajax({
       method: 'POST',
@@ -35,16 +53,42 @@ function setEventListeners () {
       error: handleError
     })
   });
+
+  // New Song button event listener
+  $('.add-song').on('click', function(e) {
+    let currentAlbumId = $(this).parents('.album').data('album-id');
+    $('#songModal').data('album-id', currentAlbumId);
+    $('#songModal').modal();
+    handleNewSongSubmit(currentAlbumId);
+  });
 }
 
+function buildSongsHtml(songs) {
+  let songText = "";
+  songs.forEach( (song, index) => {
+    if (index < songs.length-1) {
+      songText = songText + "(" + song.trackNumber + ") " + song.name + ", ";
+    } else {
+      songText = songText + "(" + song.trackNumber + ") " + song.name;
+    }
+  });
+  let songsHtml = songText;
+
+  return `<li class="list-group-item">
+            <h4 class="inline-header">Songs:</h4>
+            <span>${songsHtml}</span>
+          </li>`;
+};
+
 function getAlbumHtml(album) {
+  songs = album.songs;
   return `<!-- one album -->
           
-          <div class="row album">
+          <div class="row album" data-album-id=${album._id}>
 
             <form id="newAlbumForm">
               <fieldset>
-                <div class="modal fade" id="modalContactForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal fade" id="modalAlbumForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header text-left">
@@ -101,11 +145,13 @@ function getAlbumHtml(album) {
                           <h4 class='inline-header'>Released date:</h4>
                           <span class='album-releaseDate'>${album.releaseDate}</span>
                         </li>
+                        ${buildSongsHtml(songs)}
                       </ul>
                     </div>
                   </div>
                   <!-- end of album internal row -->
                   <div class='panel-footer'>
+                    <button class='btn btn-primary add-song'>Add Song</button>
                   </div>
                 </div>
               </div>
@@ -129,6 +175,7 @@ function render () {
 
   // append html to the view
   $albumList.append(albumHtml);
+  
   setEventListeners();
 };
 
@@ -143,6 +190,23 @@ function newAlbumSuccess (json) {
   render();
 }
 
+function newSongSuccess (json) {
+  $('#songModal input').val('');
+  let newSongElement = json.songs.length-1;
+  let latestSongId = json.songs[newSongElement]._id;
+  let latestSongName = json.songs[newSongElement].name;
+  let latestSongTrackNumber = json.songs[newSongElement].trackNumber;
+  let indexOfUpdatedAlbum;
+  for (let albumElement = 0; albumElement < allAlbums.length; albumElement++) {
+    if (allAlbums[albumElement]._id == json._id) {
+      indexOfUpdatedAlbum = albumElement;
+    }
+  };
+  allAlbums[indexOfUpdatedAlbum].songs.push({_id: latestSongId, name: latestSongName, trackNumber: latestSongTrackNumber});
+  render();
+}
+
 function handleError(e) {
+  console.log('error:', e);
   $albumList.text('Failed to load albums, is the server working?');
 }
